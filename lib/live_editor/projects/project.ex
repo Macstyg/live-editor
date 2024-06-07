@@ -6,12 +6,14 @@ defmodule LiveEditor.Projects.Project do
     field :name, :string
     field :description, :string
 
+    belongs_to :user, LiveEditor.Accounts.User
+
     timestamps(type: :utc_datetime)
   end
 
   def changeset(project, attrs \\ %{}) do
     project
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
+    |> cast(attrs, [:name, :description, :user_id])
+    |> validate_required([:name, :user_id])
   end
 end
