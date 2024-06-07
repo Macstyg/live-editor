@@ -1,0 +1,9 @@
+<h1>Projects:</h1>
+<ul>
+  <li :for={project <- @projects}>
+    <%= project.name %>
+    <div>
+      <%= project.description %>
+    </div>
+  </li>
+</ul>
