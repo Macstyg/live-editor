@@ -71,7 +71,7 @@ defmodule LiveEditorWeb.Router do
       live "/projects", ProjectsLive.Index, :index
       live "/projects/new", ProjectsLive.Index, :new
       live "/projects/:id/edit", ProjectsLive.Index, :edit
-      live "/projects/:id/comments", ProjectsLive.Index, :comments
+      live "/projects/:id/comments", CommentsLive.Index, :comments
     end
   end
 

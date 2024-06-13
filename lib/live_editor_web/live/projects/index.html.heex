@@ -191,7 +191,10 @@
                 />
               </svg>
 
-              <div class="flex flex-col">
+              <div
+                class="cursor-pointer flex flex-col"
+                phx-click={JS.navigate(~p"/projects/#{project.id}/comments")}
+              >
                 <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                   <%= project.name %>
                 </p>

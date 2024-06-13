@@ -1,0 +1,11 @@
+<section>
+  <h1>Comments page</h1>
+  <div phx-click="add_comment" class="w-full h-screen border border-blue-gray-200">
+    <div
+      :for={comment <- @comments}
+      style={"top: #{comment.y}px; left: #{comment.x}px"}
+      class="comment"
+    >
+    </div>
+  </div>
+</section>

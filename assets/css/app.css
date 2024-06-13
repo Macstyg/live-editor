@@ -3,3 +3,20 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+.comment {
+    position: absolute;
+    height: 32px;
+    width: 32px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, .35),
+        0px 1px 3px rgba(0, 0, 0, .5),
+        inset 0px .5px 0px rgba(255, 255, 255, .08),
+        inset 0px 0px .5px rgba(255, 255, 255, .3);
+    border-radius: 16px 16px 16px 0;
+    background-color: #0c8ce9;
+}
+
+.comment:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s;
+}
