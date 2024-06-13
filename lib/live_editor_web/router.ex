@@ -68,7 +68,10 @@ defmodule LiveEditorWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
-      live "/projects", ProjectsLive.Index
+      live "/projects", ProjectsLive.Index, :index
+      live "/projects/new", ProjectsLive.Index, :new
+      live "/projects/:id/edit", ProjectsLive.Index, :edit
+      live "/projects/:id/comments", ProjectsLive.Index, :comments
     end
   end
 
