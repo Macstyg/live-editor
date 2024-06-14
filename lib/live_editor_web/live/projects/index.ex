@@ -4,8 +4,8 @@ defmodule LiveEditorWeb.ProjectsLive.Index do
   use LiveEditorWeb, :live_view
 
   def mount(_params, _session, socket) do
-    user_id = socket.assigns.current_user.id
-    socket = socket |> assign_projects(user_id) |> assign_filter_form()
+    if connected?(socket), do: Projects.subscribe()
+    socket = socket |> assign_projects() |> assign_filter_form()
 
     {:ok, socket}
   end
@@ -106,7 +106,8 @@ defmodule LiveEditorWeb.ProjectsLive.Index do
     end)
   end
 
-  defp assign_projects(socket, user_id) do
+  defp assign_projects(socket) do
+    user_id = socket.assigns.current_user.id
     projects = Projects.list_all_with_user(user_id)
 
     assign(socket, projects: projects, filtered_projects: projects)
@@ -134,5 +135,9 @@ defmodule LiveEditorWeb.ProjectsLive.Index do
 
   defp assign_filter_form(socket) do
     assign(socket, filter_form: to_form(%{"search" => ""}))
+  end
+
+  def handle_info({Projects, [:project, _], _}, socket) do
+    {:noreply, assign_projects(socket)}
   end
 end

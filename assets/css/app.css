@@ -3,7 +3,7 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
-.comment {
+.marker {
     position: absolute;
     height: 32px;
     width: 32px;
@@ -15,8 +15,45 @@
     background-color: #0c8ce9;
 }
 
-.comment:hover {
+.marker:hover {
     cursor: pointer;
     transform: scale(1.1);
     transition: transform 0.3s;
+}
+
+.comment-container {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+}
+
+.messages-list {
+    padding: 16px;
+    background-color: #2c2c2c;
+    color: #fff;
+}
+
+.input {
+    background-color: #2c2c2c;
+    padding: 8px 16px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    margin-left: 16px;
+    color: #fff;
+}
+
+.toolbar {
+    background-color: #2c2c2c;
+    padding: 8px 16px;
+    border-top: 1px solid #efefef;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    margin-left: 16px;
+}
+
+.toolbar button {
+    background-color: #0c8ce9;
+    color: #fff;
+    border-radius: 6px;
+    padding: 2px 6px;
 }

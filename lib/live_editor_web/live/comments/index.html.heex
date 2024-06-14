@@ -1,11 +1,35 @@
 <section>
   <h1>Comments page</h1>
-  <div phx-click="add_comment" class="w-full h-screen border border-blue-gray-200">
+  <div class="w-full h-screen border border-blue-gray-200">
+    <div phx-click="add_comment" class="w-full h-screen"></div>
     <div
       :for={comment <- @comments}
+      class="comment-container"
       style={"top: #{comment.y}px; left: #{comment.x}px"}
-      class="comment"
     >
+      <div class="marker"></div>
+      <div class="ml-4">
+        <.form for={@message_form} phx-submit="submit_message">
+          <div>
+            <input
+              class="input"
+              name="text"
+              value={Phoenix.HTML.Form.normalize_value("text", @message_form[:text].value)}
+              type="text"
+              placeholder="Add a comment"
+            />
+            <input type="hidden" name="comment_id" value={comment.id} />
+          </div>
+          <div class="toolbar">
+            <button type="submit">Post</button>
+          </div>
+        </.form>
+      </div>
+      <div class="messages-list">
+        <div :for={message <- comment.messages} class="message">
+          <div class="message-text"><%= message.text %></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

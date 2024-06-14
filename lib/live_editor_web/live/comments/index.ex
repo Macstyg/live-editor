@@ -1,9 +1,10 @@
 defmodule LiveEditorWeb.CommentsLive.Index do
   use LiveEditorWeb, :live_view
   alias LiveEditor.Comments
+  alias LiveEditor.Messages
 
   def mount(%{"id" => project_id}, _uri, socket) do
-    socket = socket |> assign_comments(project_id)
+    socket = socket |> assign_comments(project_id) |> assign_form()
 
     {:ok, socket}
   end
@@ -18,6 +19,8 @@ defmodule LiveEditorWeb.CommentsLive.Index do
       |> Comments.create()
       |> case do
         {:ok, comment} ->
+          comment = comment |> Comments.preload_messages()
+
           socket
           |> assign(comments: [comment | socket.assigns.comments])
           |> put_flash(:info, "Comment added successfully")
@@ -29,8 +32,38 @@ defmodule LiveEditorWeb.CommentsLive.Index do
     {:noreply, socket}
   end
 
+  def handle_event("submit_message", params, socket) do
+    socket =
+      params
+      |> Map.put("user_id", socket.assigns.current_user.id)
+      |> Messages.create()
+      |> case do
+        {:ok, message} ->
+          comments =
+            Enum.map(socket.assigns.comments, fn comment ->
+              Map.update(comment, :messages, [], &(List.wrap(&1) ++ [message]))
+            end)
+
+          socket
+          |> assign(comments: comments)
+          |> assign_form()
+          |> put_flash(:info, "Message added successfully")
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          socket
+          |> assign(message_form: to_form(changeset))
+          |> put_flash(:error, "Error adding message")
+      end
+
+    {:noreply, socket}
+  end
+
   def assign_comments(socket, project_id) do
     comments = Comments.list_all(project_id)
     assign(socket, comments: comments, project_id: project_id)
+  end
+
+  def assign_form(socket) do
+    assign(socket, message_form: to_form(%{"text" => ""}))
   end
 end

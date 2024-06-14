@@ -8,6 +8,7 @@ defmodule LiveEditor.Projects.Project do
   schema "projects" do
     field :name, :string
     field :description, :string
+    field :is_public, :boolean, default: false
 
     belongs_to :user, LiveEditor.Accounts.User
 
@@ -16,7 +17,7 @@ defmodule LiveEditor.Projects.Project do
 
   def changeset(project, attrs \\ %{}) do
     project
-    |> cast(attrs, [:name, :description, :user_id, :id])
+    |> cast(attrs, [:name, :description, :user_id, :is_public, :id])
     |> validate_required([:name, :user_id])
     |> unique_constraint([:name, :user_id], name: :projects_name_user_id_idx)
   end

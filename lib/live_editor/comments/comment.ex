@@ -11,6 +11,7 @@ defmodule LiveEditor.Comments.Comment do
 
     belongs_to :user, LiveEditor.Accounts.User
     belongs_to :project, LiveEditor.Projects.Project
+    has_many :messages, LiveEditor.Messages.Message
 
     timestamps(type: :utc_datetime)
   end

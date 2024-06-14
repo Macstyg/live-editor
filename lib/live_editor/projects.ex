@@ -7,12 +7,22 @@ defmodule LiveEditor.Projects do
   alias LiveEditor.Projects.Project
   alias LiveEditor.Repo
 
+  @topic inspect(__MODULE__)
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(LiveEditor.PubSub, @topic)
+  end
+
   defp query_by_user_id(user_id) do
     from p in Project, where: p.user_id == ^user_id
   end
 
   def list_all(user_id) do
-    Repo.all(from p in query_by_user_id(user_id), order_by: [desc: p.inserted_at])
+    Repo.all(
+      from p in query_by_user_id(user_id),
+        or_where: p.is_public == true,
+        order_by: [desc: p.inserted_at]
+    )
   end
 
   def list_all_with_user(user_id) do
@@ -31,6 +41,7 @@ defmodule LiveEditor.Projects do
     %Project{}
     |> Project.changeset(args)
     |> Repo.insert()
+    |> notify_subscribers([:project, :created])
   end
 
   def edit(%{"user_id" => user_id, "id" => id} = args) do
@@ -40,6 +51,7 @@ defmodule LiveEditor.Projects do
         project
         |> Project.changeset(args)
         |> Repo.update()
+        |> notify_subscribers([:project, :updated])
 
       _ ->
         {:error, :not_found}
@@ -49,4 +61,11 @@ defmodule LiveEditor.Projects do
   def preload_user(project) do
     project |> Repo.preload(:user)
   end
+
+  defp notify_subscribers({:ok, result}, event) do
+    Phoenix.PubSub.broadcast(LiveEditor.PubSub, @topic, {__MODULE__, event, result})
+    {:ok, result}
+  end
+
+  defp notify_subscribers({:error, reason}, _event), do: {:error, reason}
 end
