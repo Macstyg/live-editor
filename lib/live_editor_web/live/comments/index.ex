@@ -4,6 +4,8 @@ defmodule LiveEditorWeb.CommentsLive.Index do
   alias LiveEditor.Messages
 
   def mount(%{"id" => project_id}, _uri, socket) do
+    if connected?(socket), do: Comments.subscribe()
+    if connected?(socket), do: Messages.subscribe()
     socket = socket |> assign_comments(project_id) |> assign_form()
 
     {:ok, socket}
@@ -65,5 +67,13 @@ defmodule LiveEditorWeb.CommentsLive.Index do
 
   def assign_form(socket) do
     assign(socket, message_form: to_form(%{"text" => ""}))
+  end
+
+  def handle_info({Comments, [:comment, _], _}, socket) do
+    {:noreply, assign_comments(socket, socket.assigns.project_id)}
+  end
+
+  def handle_info({Messages, [:message, _], _}, socket) do
+    {:noreply, assign_comments(socket, socket.assigns.project_id)}
   end
 end

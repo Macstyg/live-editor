@@ -13,6 +13,13 @@ defmodule LiveEditor.Projects do
     Phoenix.PubSub.subscribe(LiveEditor.PubSub, @topic)
   end
 
+  defp notify_subscribers({:ok, result}, event) do
+    Phoenix.PubSub.broadcast(LiveEditor.PubSub, @topic, {__MODULE__, event, result})
+    {:ok, result}
+  end
+
+  defp notify_subscribers({:error, reason}, _event), do: {:error, reason}
+
   defp query_by_user_id(user_id) do
     from p in Project, where: p.user_id == ^user_id
   end
@@ -61,11 +68,4 @@ defmodule LiveEditor.Projects do
   def preload_user(project) do
     project |> Repo.preload(:user)
   end
-
-  defp notify_subscribers({:ok, result}, event) do
-    Phoenix.PubSub.broadcast(LiveEditor.PubSub, @topic, {__MODULE__, event, result})
-    {:ok, result}
-  end
-
-  defp notify_subscribers({:error, reason}, _event), do: {:error, reason}
 end
