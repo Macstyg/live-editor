@@ -22,7 +22,7 @@ defmodule LiveEditor.Comments do
   def list_all(project_id) do
     Repo.all(
       from c in Comment,
-        preload: :messages,
+        preload: [messages: [:user]],
         where: c.project_id == ^project_id,
         order_by: [desc: c.inserted_at]
     )
@@ -40,6 +40,6 @@ defmodule LiveEditor.Comments do
   end
 
   def preload_messages(comment) do
-    comment |> Repo.preload(:messages)
+    comment |> Repo.preload(messages: [:user])
   end
 end

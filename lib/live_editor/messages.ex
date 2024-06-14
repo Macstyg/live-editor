@@ -29,4 +29,8 @@ defmodule LiveEditor.Messages do
     |> Repo.insert()
     |> notify_subscribers([:message, :created])
   end
+
+  def preload_user(message) do
+    message |> Repo.preload(:user)
+  end
 end

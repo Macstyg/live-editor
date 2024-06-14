@@ -41,6 +41,8 @@ defmodule LiveEditorWeb.CommentsLive.Index do
       |> Messages.create()
       |> case do
         {:ok, message} ->
+          message = message |> Messages.preload_user()
+
           comments =
             Enum.map(socket.assigns.comments, fn comment ->
               Map.update(comment, :messages, [], &(List.wrap(&1) ++ [message]))
